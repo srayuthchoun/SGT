@@ -9,17 +9,17 @@
 </head>
 <body>
 <div class="row">
-    <div class="page-header">
+    <div class="row">
         <!-- only show this element when the isnt on mobile -->
-        <h1>Student Grade Table
-            <small>Grade Average : <span class="avgGrade"></span></small>
+        <h1 class="visible-lg page-header col-md-offset-1">Student Grade Table
+            <small class="col-md-offset-5">Grade Average : <span class="avgGrade"></span></small>
         </h1>
         <!-- only show this element when the user gets to a mobile version -->
-        <h3>Student Grade Table
+        <h3 class="visible-xs page-header">Student Grade Table
             <small>Grade Average : <span class="avgGrade"></span></small>
         </h3>
     </div>
-    <form class="form-horizontal col-md-3 col-md-push-7 col-md-offset-1" role="form">
+    <form class="form-horizontal col-md-2 col-md-offset-1 col-md-push-7" role="form">
         <div class="col-md-12 student-add-form">
             <h4>Add Student</h4>
             <div class="col-xs-12 col-md-12">
@@ -42,14 +42,14 @@
                 <input type="text" class="form-control input-sm" name="studentGrade" id="studentGrade"
                        placeholder="Student Grade">
             </div>
-            <button type="button" class="btn btn-success" onclick="">Add</button>
+            <button type="button" class="btn btn-success col-xs-offset-1" onclick="">Add</button>
             <button type="button" class="btn btn-default" onclick="">Cancel</button>
         </div>
 
     </form>
 
-    <div class=" col-md-7 col-md-pull-4 col-md-offset-1 student-list-container table-responsive">
-        <table class="student-list table col-md-12">
+    <div class="col-md-7 col-md-offset-2 col-md-pull-4 student-list-container table-responsive">
+        <table class="table student-list table col-md-12">
             <thead>
             <tr>
                 <th>Student Name</th>
