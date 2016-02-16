@@ -8,8 +8,8 @@
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
-<div class="">
-    <div class="">
+<div class="row">
+    <div class="page-header">
         <!-- only show this element when the isnt on mobile -->
         <h1>Student Grade Table
             <small>Grade Average : <span class="avgGrade"></span></small>
@@ -19,33 +19,37 @@
             <small>Grade Average : <span class="avgGrade"></span></small>
         </h3>
     </div>
-    <div class="student-add-form">
-        <h4>Add Student</h4>
-        <div>
+    <form class="form-horizontal col-md-3 col-md-push-7 col-md-offset-1" role="form">
+        <div class="col-md-12 student-add-form">
+            <h4>Add Student</h4>
+            <div class="col-xs-12 col-md-12">
             <span>
-                <span class="glyphicon"></span>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </span>
-            <input type="text" class="" name="studentName" id="studentName" placeholder="Student Name">
-        </div>
-        <div class="">
-            <span class="">
-                <span class="glyphicon"></span>
+                <input type="text" class="form-control input-sm" name="studentName" id="studentName" placeholder="Student Name">
+            </div>
+            <div class="col-xs-12 col-md-12">
+            <span class="col-md-12">
+                <span class="glyphicon glyphicon-list-alt form-control-feedback"></span>
             </span>
-            <input type="text" class="" name="course" id="course"
-                   placeholder="Student Course">
-        </div>
-        <div class="">
-            <span class="">
-                <span class="glyphicon"></span>
+                <input type="text" class="form-control input-sm" name="course" id="course"
+                       placeholder="Student Course">
+            </div>
+            <div class="col-xs-12 col-md-12">
+            <span class="col-md-3">
+                <span class="glyphicon glyphicon-education form-control-feedback"></span>
             </span>
-            <input type="text" class="" name="studentGrade" id="studentGrade"
-                   placeholder="Student Grade">
+                <input type="text" class="form-control input-sm" name="studentGrade" id="studentGrade"
+                       placeholder="Student Grade">
+            </div>
+            <button type="button" class="btn btn-success" onclick="">Add</button>
+            <button type="button" class="btn btn-default" onclick="">Cancel</button>
         </div>
-        <button type="button" class="" onclick="">Add</button>
-        <button type="button" class="" onclick="">Cancel</button>
-    </div>
-    <div class="student-list-container">
-        <table class="student-list">
+
+    </form>
+
+    <div class=" col-md-7 col-md-pull-4 col-md-offset-1 student-list-container table-responsive">
+        <table class="student-list table col-md-12">
             <thead>
             <tr>
                 <th>Student Name</th>
