@@ -12,19 +12,15 @@ var student_count = 0;
  * @type {Array}
  */
 var student_array = [
-    {
-        student_name : 'Eric Johnson',
+    {   student_name : 'Eric Johnson',
         student_course:'math',
         student_grade: 80
-
     },
-    {
-        student_name : 'Danial Paschal',
+    {   student_name : 'Danial Paschal',
         student_course:'Science',
         student_grade: 100
     },
-    {
-        student_name : 'Eric Johnson',
+    {   student_name : 'Eric Johnson',
         student_course:'Science',
         student_grade: 60
     }
@@ -73,7 +69,7 @@ function calculate_average(student_array){
     var max_number = 0;
     for(var i = 1; i < student_array.length; i++)
     {
-        console.log('checking '+student_array[i].rating+' versus '+max_avg);
+        console.log('checking '+student_array[i].student_grade+' versus '+max_avg);
         if(student_array[i].rating > max_avg){
             max_avg = student_array[i].student_grade;
             max_number = i;
