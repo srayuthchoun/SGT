@@ -137,7 +137,7 @@ function addStudentToDom(student_object) {
         $(this).closest('tr').remove();
         console.log("this: " ,$(this));
         console.log("del clicked : ", student_array[$(this).index()]);
-        console.log("student_array: ", student_array)
+        console.log("student_array: ", student_array);
         //student_array.splice(student_array[$(this).index()]);
 
     });
