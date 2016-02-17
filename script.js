@@ -126,8 +126,24 @@ function addStudentToDom(student_object) {
     var newCol1 = $('<td>').html(student_object.studentName);
     var newCol2 = $('<td>').html(student_object.course);
     var newCol3 = $('<td>').html(student_object.studentGrade);
-    new_table_row.append(newCol1, newCol2, newCol3);
+    var delbutton = $('<button>').html("Delete").addClass("btn btn-danger");
+    var newCol4 = $('<td>').html(delbutton);
+    new_table_row.append(newCol1, newCol2, newCol3, newCol4);
     $('.student-list > tbody').append(new_table_row);
+
+    /*delbutton.on('click',function(){
+
+        console.log('delete button clicked');
+        $(this).closest('tr').remove();
+        console.log("this: " ,$(this));
+        console.log("del clicked : ", student_array[$(this).index()]);
+
+        //student_array.splice(student_array[$(this).index()]);
+
+    });*/
+
+    //var operationsColumn = $('<td>').html(deleteBtn);
+    //newTableRow.append(operationsColumn);
 
 }
 /**
@@ -147,4 +163,16 @@ $(document).ready(function () {
     addClicked(); //addClicked function call to add button click function
     cancelClicked(); //cancelClicked function call to cancel button click function
     reset(); //reset function loaded to reset application to default state
+});
+
+$(document).on('click', '.btn-danger', function(){
+
+    console.log('delete button clicked');
+    $(this).closest('tr').remove();
+    console.log("this: " ,$(this));
+    console.log("del clicked : ", student_array[$(this).index()]);
+    console.log($(this).index());
+
+    //student_array.splice(student_array[$(this).index()]);
+
 });
