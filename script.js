@@ -7,7 +7,7 @@
  */
 var student_array = [];
 /**
- * inputIds - id's of the elements that are used to add students
+ * inputIds - id's of the elements that are used to add students more testing
  * @type {string[]}
  */
 var inputIds = ['studentName','course','studentGrade'];
