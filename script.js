@@ -21,8 +21,7 @@ var inputIds = ['studentName','course','studentGrade'];
 function add_button(){
     $('.add_student').click(function(){
         addStudent();
-        updateStudentList();
-        addStudentToDom();
+
     });
 }
 /**
@@ -47,6 +46,8 @@ function addStudent(){
         console.log('value: ',value);
     }
     student_array.push(student_obj);
+    updateStudentList();
+    addStudentToDom();
 }
 /**
   clearAddStudentForm - clears out the form values based on inputIds variable
