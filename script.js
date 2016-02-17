@@ -131,16 +131,16 @@ function addStudentToDom(student_object) {
     new_table_row.append(newCol1, newCol2, newCol3, newCol4);
     $('.student-list > tbody').append(new_table_row);
 
-    /*delbutton.on('click',function(){
+    delbutton.on('click',function(){
 
         console.log('delete button clicked');
         $(this).closest('tr').remove();
         console.log("this: " ,$(this));
         console.log("del clicked : ", student_array[$(this).index()]);
-
+        console.log("student_array: ", student_array)
         //student_array.splice(student_array[$(this).index()]);
 
-    });*/
+    });
 
     //var operationsColumn = $('<td>').html(deleteBtn);
     //newTableRow.append(operationsColumn);
@@ -165,7 +165,7 @@ $(document).ready(function () {
     reset(); //reset function loaded to reset application to default state
 });
 
-$(document).on('click', '.btn-danger', function(){
+/*$(document).on('click', '.btn-danger', function(){
 
     console.log('delete button clicked');
     $(this).closest('tr').remove();
@@ -175,4 +175,4 @@ $(document).on('click', '.btn-danger', function(){
 
     //student_array.splice(student_array[$(this).index()]);
 
-});
+});*/
