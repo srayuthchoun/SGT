@@ -52,7 +52,9 @@ function addStudent() {
         console.log('index: ', student_index);
         console.log('value: ', value);
     }
+    if(student_obj.studentName !== "" && student_obj.course !== "" && student_obj.studentGrade !== "") {
         student_array.push(student_obj);
+    }
     clearAddStudentForm();
     updateData();
 }
