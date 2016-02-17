@@ -19,15 +19,6 @@ function add_button(){
         addStudent();
     });
 }
-var inputIds = ['studentName', 'course', 'studentGrade'];
-/**
- * addClicked - Event Handler when user clicks the add button
- */
-function addClicked() {
-    $('.add_student').click(function () {
-        addStudent();
-    });
-}
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
@@ -40,24 +31,11 @@ function cancelClicked() {
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  * @return undefined
  */
-function addStudent(){
-    var student_obj ={};
-    for(i =0 ;i<inputIds.length;i++){
-        var student_index = inputIds[i];
-        var value = $('#'+student_index).val();
-        student_obj[student_index] = value;
-        console.log('index: ',student_index);
-        console.log('value: ',value);
-    }
-    student_array.push(student_obj);
-    updateStudentList();
-    addStudentToDom();
-}
+
 function addStudent() {
     console.log('addStudent function');
     var student_obj = {};
     for (var i = 0; i < inputIds.length; i++) { //looping through inputIds and using jquery to get value using html classes
-        console.log('loop', i);
         var student_index = inputIds[i];
         var value = $('#' + student_index).val();
         student_obj[student_index] = value;
@@ -95,7 +73,7 @@ function calculateAverage() {
     for (var i = 0; i < student_array.length; i++) { //looping through student_array for studentGrade and add to total
         total += parseFloat(student_array[i].studentGrade);
     }
-    var average = Math.round(total / student_array.length); //Calculation for the average
+    average = Math.round(total / student_array.length); //Calculation for the average
     console.log('average: ', average);
     return average;
 }
@@ -112,7 +90,7 @@ function updateData() {
  */
 function updateStudentList() {
 
-    $('.student-list tbody').html('');
+    $('.student-list > tbody').html('');
 
     for(var i = 0; i < student_array.length; i++){
         var student_object = student_array[i];
@@ -137,7 +115,7 @@ function addStudentToDom(studentObj){
         var newStudentGrade = $("<td>").html(studentObj.studentGrade);
         var newTableRow = $("<tr>");
         newTableRow.append(newStudentName,newStudentCourse,newStudentGrade);
-        $(".student-list > tbody").append(newTableRow);
+        $(".student-list tbody").append(newTableRow);
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
@@ -151,7 +129,7 @@ function reset() {
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function () {
-    addClicked(); //addClicked function call to add button click function
+    add_button(); //addClicked function call to add button click function
     cancelClicked(); //cancelClicked function call to cancel button click function
     reset(); //reset function loaded to reset application to default state
 });
