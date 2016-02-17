@@ -8,7 +8,7 @@
 var student_array = [
     {studentName: 'first', course: 'frist', studentGrade: '0', deleted:false},
     {studentName: 'second', course: 'secnod', studentGrade: '50', deleted:false},
-    {studentName: 'third', course: 'thrid', studentGrade: '100', deleted:false},
+    {studentName: 'third', course: 'thrid', studentGrade: '100', deleted:true},
     {studentName: 'four', course: 'fore', studentGrade: '25', deleted:false},
     {studentName: 'fifth', course: 'fiff', studentGrade: '75', deleted:false}
 ];
@@ -22,6 +22,7 @@ var inputIds = ['studentName','course','studentGrade'];
  * addClicked - Event Handler when user clicks the add button
  */
 function add_button(){
+
     addStudent();
     updateData();
     clearAddStudentForm();
@@ -47,11 +48,12 @@ function addStudent() {
         console.log('index: ', student_index);
         console.log('value: ', value);
     }
+    new_student['deleted'] = false;
 
     var matchNotFound = true;
     for (student in student_array) {
         //if already present, don't put into array
-        if (student_array[student].studentName == new_student.name &&
+        if (student_array[student].studentName == new_student.studentName &&
             student_array[student].course == new_student.course &&
             student_array[student].deleted == false)
         {
@@ -81,6 +83,10 @@ function clearAddStudentForm() {
     }
 }
 
+/**
+ * removeStudent - loop through the global student array and calculate average grade and return that value
+ * @returns {number}
+ */
 function removeStudent(studentObj)
 {
     student_array[student_array.indexOf(studentObj)].deleted=true;
@@ -90,7 +96,6 @@ function removeStudent(studentObj)
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
  */
-
 function calculateAverage() {
     var total = 0;
     var average= 0;
@@ -121,11 +126,12 @@ function calculateAverage() {
     return average;
 }
 
+
 /**
  * updateData - centralized function to update the average and call student list update
  */
 function updateData() {
-    var average = calculateAverage();
+    var average = +(calculateAverage()).toFixed(2);
     $('.avgGrade').html(average);
     updateStudentList();
 }
