@@ -45,6 +45,7 @@ function addStudent() {
         console.log('index: ', student_index);
         console.log('value: ', value);
     }
+    student_obj['deleted'] = false;
     if(student_obj.studentName !== "" && student_obj.course !== "" && student_obj.studentGrade !== "") {
         student_array.push(student_obj);
     }
@@ -63,7 +64,7 @@ function addStudent() {
 function clearAddStudentForm() {
     for (var i = 0; i < inputIds.length; i++) {
         var index = inputIds[i];
-        var value = $('#' + index).val("");
+        $('#' + index).val("");
     }
 }
 /**
@@ -73,10 +74,16 @@ function clearAddStudentForm() {
 function calculateAverage() {
     var total = 0;
     var average= 0;
+    var delete_obj = 0;
     for (var i = 0; i < student_array.length; i++) { //looping through student_array for studentGrade and add to total
-        total += parseFloat(student_array[i].studentGrade);
+        if(student_array[i].deleted != true){
+            total += parseFloat(student_array[i].studentGrade);
+        }
+        else{
+           delete_obj++;
+        }
     }
-    average = Math.round(total / student_array.length); //Calculation for the average
+    average = Math.round(total /(student_array.length -delete_obj)); //Calculation for the average
     console.log('average: ', average);
     return average;
 }
@@ -87,16 +94,18 @@ function updateData() {
     var average = calculateAverage();
     $('.avgGrade').html(average);
     updateStudentList();
+    delete_student();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
+var student_object;
 function updateStudentList() {
 
     $('.student-list > tbody').html('');
 
     for(var i = 0; i < student_array.length; i++){
-        var student_object = student_array[i];
+        student_object = student_array[i];
         console.log('updateStudentList function, student object: ', student_object);
         addStudentToDom(student_object);
     }
@@ -116,10 +125,29 @@ function addStudentToDom(studentObj){
         var newStudentName = $("<td>").html(studentObj.studentName);
         var newStudentCourse = $("<td>").html(studentObj.course);
         var newStudentGrade = $("<td>").html(studentObj.studentGrade);
+        var delete_button_data = $("<td>");
+        var delete_button = $("<button>").text('delete').addClass('btn-danger delete');
+        delete_button_data.append(delete_button);
         var newTableRow = $("<tr>");
-        newTableRow.append(newStudentName,newStudentCourse,newStudentGrade);
+        newTableRow.append(newStudentName,newStudentCourse,newStudentGrade,delete_button_data);
         $(".student-list tbody").append(newTableRow);
+
 }
+function delete_student(){
+    $(".delete").click(function(){
+        console.log('deleting');
+    });
+}
+
+//function delete_student_row(){
+//    student_array = delete student_array[0];
+//}
+/*
+ Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
+ Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
+* */
+
+
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
