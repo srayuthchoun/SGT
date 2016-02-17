@@ -5,6 +5,9 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
+    /*
+    * This is a test push - Ash in da house hey there
+    * */
 var student_array = [];
 /**
  * inputIds - id's of the elements that are used to add students
