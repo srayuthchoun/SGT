@@ -44,7 +44,7 @@ function cancelClicked() {
 function addStudent() {
     console.log('addStudent function');
     var student_obj = {};
-    for (var i = 0; i < inputIds.length; i++) { //looping through inputIds and using jquery to get value within the  html classes
+    for (var i = 0; i < inputIds.length; i++) { //looping through inputIds and using jquery to get value using html classes
         console.log('loop', i);
         var student_index = inputIds[i];
         var value = $('#' + student_index).val();
@@ -98,9 +98,6 @@ function updateData() {
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
 function updateStudentList() {
-    if (student_array.length == 0) {
-        var user_unavail_msg = $('<td>').attr("colspan", 6).append($('<h2>').html("User Info Unavailable"));
-    }
 
     $('.student-list tbody').html('');
 
@@ -108,6 +105,11 @@ function updateStudentList() {
         var student_object = student_array[i];
         console.log('updateStudentList function, student object: ', student_object);
         addStudentToDom(student_object);
+    }
+
+    if (student_array.length == 0) {
+        var user_unavail_msg = $('<td>').attr("colspan", 6).append($('<h2>').html("User Info Unavailable"));
+        $('.student-list tbody').html(user_unavail_msg);
     }
 }
 
