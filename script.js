@@ -50,7 +50,9 @@ function addStudent() {
     }
     new_student['deleted'] = false;
 
+    //assumes new entry
     var matchNotFound = true;
+    //loop through existing array
     for (student in student_array) {
         //if already present, don't put into array
         if (student_array[student].studentName == new_student.studentName &&
