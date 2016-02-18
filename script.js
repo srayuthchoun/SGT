@@ -52,11 +52,19 @@ function addStudent() {
 
     new_student['deleted'] = false;
 
+    //if any fields are empty, invalid entry, don't put in array
+    if ( (new_student.studentName == '') ||
+        (new_student.studentName == '') ||
+        (new_student.studentName == ''))
+    {
+        return;
+    }
+
     //assumes new entry
     var matchNotFound = true;
     //loop through existing array
     for (student in student_array) {
-        //if already present, don't put into array
+        // if already present, don't put into array
         if (student_array[student].studentName == new_student.studentName &&
             student_array[student].course == new_student.course &&
             student_array[student].deleted == false)
@@ -65,7 +73,7 @@ function addStudent() {
             break;
         }
     }
-    //if not present, add to array
+    //if not present or 1+ fields empty, add to array
     if (matchNotFound) {
         student_array.push(new_student);
     }
@@ -137,7 +145,6 @@ function updateData() {
     var average = +(calculateAverage()).toFixed(2);
     $('.avgGrade').html(average);
     updateStudentList();
-    delete_student();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
