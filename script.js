@@ -5,6 +5,7 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
+
 var student_array = [
     {studentName: 'first', course: 'frist', studentGrade: '0', deleted:false},
     {studentName: 'second', course: 'secnod', studentGrade: '50', deleted:false},
@@ -14,7 +15,7 @@ var student_array = [
 ];
 
 /**
- * inputIds - id's of the elements that are used to add students
+ * inputIds - id's of the elements that are used to add students more testing
  * @type {string[]}
  */
 var inputIds = ['studentName','course','studentGrade'];
@@ -48,6 +49,7 @@ function addStudent() {
         console.log('index: ', student_index);
         console.log('value: ', value);
     }
+
     new_student['deleted'] = false;
 
     //assumes new entry
@@ -86,8 +88,7 @@ function clearAddStudentForm() {
 }
 
 /**
- * removeStudent - loop through the global student array and calculate average grade and return that value
- * @returns {number}
+ * removeStudent - find the student object to be deleted in the array, and set it's 'deleted' to true
  */
 function removeStudent(studentObj)
 {
@@ -100,8 +101,8 @@ function removeStudent(studentObj)
  */
 function calculateAverage() {
     var total = 0;
-    var average= 0;
-    var deletedEntries=0;
+    var average = 0;
+    var deletedEntries = 0;
     //if nothing in array, return 0
     if (student_array.length > 0)
     {
@@ -124,7 +125,7 @@ function calculateAverage() {
             average = (total / (student_array.length - deletedEntries));
         }
     }
-    //if array length <1 OR no un-deleted entries
+    //if array length <1 OR no un-deleted entries, array is 0
     return average;
 }
 
@@ -136,10 +137,12 @@ function updateData() {
     var average = +(calculateAverage()).toFixed(2);
     $('.avgGrade').html(average);
     updateStudentList();
+    delete_student();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
+
 function updateStudentList() {
     var currentName;
     var currentCourse;
@@ -213,6 +216,16 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
     studentRow.append(studentNameTD, studentCourseTD, studentGradeTD, studentButtonTD);
     $('tbody').append(studentRow);
 }
+
+//function delete_student_row(){
+//    student_array = delete student_array[0];
+//}
+/*
+ Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
+ Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
+* */
+
+
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
