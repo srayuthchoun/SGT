@@ -54,8 +54,8 @@ function addStudent() {
 
     //if any fields are empty, invalid entry, don't put in array
     if ( (new_student.studentName == '') ||
-        (new_student.studentName == '') ||
-        (new_student.studentName == ''))
+        (new_student.course == '') ||
+        (new_student.studentGrade == ''))
     {
         return;
     }
