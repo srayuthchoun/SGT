@@ -132,13 +132,17 @@ function addStudentToDom(student_object) {
     $('.student-list > tbody').append(new_table_row);
 
     delbutton.on('click',function(){
-
-        console.log('delete button clicked');
+        var choice = confirm('do you want to delete user '+student_object.studentName);
+        if (choice){
+            student_array.splice(student_array.indexOf(student_object), 1);
+            new_table_row.remove();
+        }
+       /* console.log('delete button clicked');
         $(this).closest('tr').remove();
         console.log("this: " ,$(this));
         console.log("del clicked : ", student_array[$(this).index()]);
         console.log("student_array: ", student_array);
-        //student_array.splice(student_array[$(this).index()]);
+        //student_array.splice(student_array[$(this).index()]);*/
 
     });
 
