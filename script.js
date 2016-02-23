@@ -1,26 +1,22 @@
 /**
  * Define all global variables here
  * */
+var apiKey = '6AUO9AMoSM';
 /**
  * student_array - global array to hold student objects
  * @type {Array}
  */
-
-var student_array = [
-];
-var data;
+var student_array = [];
 /**
  * inputIds - id's of the elements that are used to add students more testing
  * @type {string[]}
  */
-var inputIds = ['name','course','grade'];
+var inputIds = ['name', 'course', 'grade'];
 /**
  * addClicked - Event Handler when user clicks the add button
  */
-function addClicked(){
-
+function addClicked() {
     addStudent();
-    updateData();
     clearAddStudentForm();
 }
 /**
@@ -34,17 +30,14 @@ function cancelClicked() {
  */
 function getDataClicked() {
     callDatabase();
-    updateData();
 }
-
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  * @return undefined
  */
-
 function addStudent() {
     console.log('addStudent function');
-    var new_student  = {};
+    var new_student = {};
     for (var i = 0; i < inputIds.length; i++) { //looping through inputIds and using jquery to get value using html classes
         var student_index = inputIds[i];
         var value = $('#' + student_index).val();
@@ -56,10 +49,9 @@ function addStudent() {
     new_student['deleted'] = false;
 
     //if any fields are empty, invalid entry, don't put in array
-    if ( (new_student.name == '') ||
+    if ((new_student.name == '') ||
         (new_student.course == '') ||
-        (new_student.grade == ''))
-    {
+        (new_student.grade == '')) {
         return;
     }
 
@@ -70,8 +62,7 @@ function addStudent() {
         // if already present, don't put into array
         if (student_array[student].name == new_student.name &&
             student_array[student].course == new_student.course &&
-            student_array[student].deleted == false)
-        {
+            student_array[student].deleted == false) {
             matchNotFound = false;
             break;
         }
@@ -80,32 +71,23 @@ function addStudent() {
     if (matchNotFound) {
         student_array.push(new_student);
     }
-    return;
+    updateData();
 }
 /**
-  clearAddStudentForm - clears out the form values based on inputIds variable
+ clearAddStudentForm - clears out the form values based on inputIds variable
  */
-//function clearAddStudentForm(){
-//    $("#studentName").val('');
-//    $("#course").val('');
-//    $("#studentGrade").val('');
-//    console.log('empty all field:');
-//}
 function clearAddStudentForm() {
     for (var i = 0; i < inputIds.length; i++) {
         var index = inputIds[i];
         $('#' + index).val("");
     }
 }
-
 /**
  * removeStudent - find the student object to be deleted in the array, and set it's 'deleted' to true
  */
-function removeStudent(studentObj)
-{
-    student_array[student_array.indexOf(studentObj)].deleted=true;
+function removeStudent(studentObj) {
+    student_array[student_array.indexOf(studentObj)].deleted = true;
 }
-
 /**
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
@@ -115,32 +97,25 @@ function calculateAverage() {
     var average = 0;
     var deletedEntries = 0;
     //if nothing in array, return 0
-    if (student_array.length > 0)
-    {
-        for (var i = 0; i < student_array.length; i++)
-        {
+    if (student_array.length > 0) {
+        for (var i = 0; i < student_array.length; i++) {
             //if valid entry, add to total
-            if (student_array[i].deleted == false)
-            {
+            if (student_array[i].deleted == false) {
                 total += parseFloat(student_array[i].grade);
             }
             //if not, skip and add to deleted entries count
-            else
-            {
+            else {
                 deletedEntries++;
             }
         }
         //if more than 1 valid entry, calculate average
-        if (student_array.length > deletedEntries)
-        {
+        if (student_array.length > deletedEntries) {
             average = (total / (student_array.length - deletedEntries));
         }
     }
     //if array length <1 OR no un-deleted entries, array is 0
     return average;
 }
-
-
 /**
  * updateData - centralized function to update the average and call student list update
  */
@@ -152,14 +127,13 @@ function updateData() {
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
-
 function updateStudentList() {
     var currentName;
     var currentCourse;
 
     for (student in student_array) {//loop through student_array
         //if entry deleted, skip to next
-        if(student_array[student].deleted){
+        if (student_array[student].deleted) {
             continue;
         }
         //take name and course
@@ -176,8 +150,7 @@ function updateStudentList() {
             //if name-course pair is already displayed, then doesn't need to be added to display
             if (
                 (row.find('td:first-of-type').text() == currentName) &&
-                (row.find('td:nth-of-type(2)').text() == currentCourse))
-            {
+                (row.find('td:nth-of-type(2)').text() == currentCourse)) {
                 //match found, don't loop further, skip to next entry
                 matchNotFound = false;
                 break;
@@ -190,34 +163,36 @@ function updateStudentList() {
         }
     }
 }
-
 /**
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements
  * into the .student_list tbody
  * @param studentObj
  */
-
 function addStudentToDom(studentObj)//meant to add one student to the DOM, one object in the array
 // is passed into this function
 {
     var studentRow = $('<tr>');//studentRow is now a table row
     //var studentNameTD = $('<td>').text(studentObj.name);
-    var studentNameTD = $('<td>',{
+    var studentNameTD = $('<td>', {
         text: studentObj.name
     });
-    var studentCourseTD = $('<td>',{
+    var studentCourseTD = $('<td>', {
         text: studentObj.course
     });
-    var studentGradeTD = $('<td>',{
+    var studentGradeTD = $('<td>', {
         text: studentObj.grade
     });
     var studentButtonTD = $('<td>');
-    var delete_button = $('<button>',{
+    var delete_button = $('<button>', {
         type: 'button',
         class: 'btn btn-danger',
         text: 'Delete'
     });
-    delete_button.click(function(){
+    /**
+     *Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
+     *Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
+     * */
+    delete_button.click(function () {
         removeStudent(studentObj);
         $(this).parent().parent().remove();
         updateData();
@@ -226,43 +201,32 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
     studentRow.append(studentNameTD, studentCourseTD, studentGradeTD, studentButtonTD);
     $('tbody').append(studentRow);
 
+    updateData();
 }
 
-//function delete_student_row(){
-//    student_array = delete student_array[0];
-//}
-/*
- Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
- Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
-* */
 /**
- * callDatabase - Ajax call to the LFZ sgt database
+ * callDatabase - Ajax call to get data from Learning Fuze server
  */
-var apiKey = '6AUO9AMoSM';
-
-function callDatabase(){
+function callDatabase() {
     $.ajax({
-       type: "POST",
+        type: "POST",
         dataType: "json",
         data: {
             api_key: apiKey
         },
         url: "http://s-apis.learningfuze.com/sgt/get",
-        success: function(result){
-            if (!result.success){
+        success: function (result) {
+            if (!result.success) {
                 console.log("Could not retrieve data");
             }
-            data = result;
             console.log("Ajax call success", result);
-            for (var i in result.data){
-                student_array.push(result.data[i]);
-                student_array[i]['deleted'] = false;
-                addStudentToDom(result.data[i]);
+            for (var i in result.data) { //loop through the data received from LF
+                student_array.push(result.data[i]); //adding objects from the data to the student array
+                student_array[i]['deleted'] = false; //add deleted values to the objects
+                addStudentToDom(result.data[i]); //add the data to the table
             }
         }
-
     });
-    return;
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
@@ -276,12 +240,6 @@ function reset() {
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function () {
-    //add_button();
-    addClicked(); //addClicked function call to add button click function
-    cancelClicked(); //cancelClicked function call to cancel button click function
     reset(); //reset function loaded to reset application to default state
-    updateData();
-    //reset(); //reset function loaded to reset application to default state
-    //comment out reset to load with dummy data
 });
 
