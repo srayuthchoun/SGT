@@ -7,22 +7,17 @@
  */
 
 var student_array = [
-    {studentName: 'first', course: 'frist', studentGrade: '0', deleted:false},
-    {studentName: 'second', course: 'secnod', studentGrade: '50', deleted:false},
-    {studentName: 'third', course: 'thrid', studentGrade: '100', deleted:true},
-    {studentName: 'four', course: 'fore', studentGrade: '25', deleted:false},
-    {studentName: 'fifth', course: 'fiff', studentGrade: '75', deleted:false}
 ];
-
+var data;
 /**
  * inputIds - id's of the elements that are used to add students more testing
  * @type {string[]}
  */
-var inputIds = ['studentName','course','studentGrade'];
+var inputIds = ['name','course','grade'];
 /**
  * addClicked - Event Handler when user clicks the add button
  */
-function add_button(){
+function addClicked(){
 
     addStudent();
     updateData();
@@ -34,6 +29,14 @@ function add_button(){
 function cancelClicked() {
     clearAddStudentForm();
 }
+/**
+ * getDataClicked - Event Handler when user clicks the get Data from Server button, should pull data from LFZ server
+ */
+function getDataClicked() {
+    callDatabase();
+    updateData();
+}
+
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  * @return undefined
@@ -53,9 +56,9 @@ function addStudent() {
     new_student['deleted'] = false;
 
     //if any fields are empty, invalid entry, don't put in array
-    if ( (new_student.studentName == '') ||
+    if ( (new_student.name == '') ||
         (new_student.course == '') ||
-        (new_student.studentGrade == ''))
+        (new_student.grade == ''))
     {
         return;
     }
@@ -65,7 +68,7 @@ function addStudent() {
     //loop through existing array
     for (student in student_array) {
         // if already present, don't put into array
-        if (student_array[student].studentName == new_student.studentName &&
+        if (student_array[student].name == new_student.name &&
             student_array[student].course == new_student.course &&
             student_array[student].deleted == false)
         {
@@ -119,7 +122,7 @@ function calculateAverage() {
             //if valid entry, add to total
             if (student_array[i].deleted == false)
             {
-                total += parseFloat(student_array[i].studentGrade);
+                total += parseFloat(student_array[i].grade);
             }
             //if not, skip and add to deleted entries count
             else
@@ -160,7 +163,7 @@ function updateStudentList() {
             continue;
         }
         //take name and course
-        currentName = student_array[student].studentName;
+        currentName = student_array[student].name;
         currentCourse = student_array[student].course;
         //assumes entry is not already displayed
         var matchNotFound = true;
@@ -200,13 +203,13 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
     var studentRow = $('<tr>');//studentRow is now a table row
     //var studentNameTD = $('<td>').text(studentObj.name);
     var studentNameTD = $('<td>',{
-        text: studentObj.studentName
+        text: studentObj.name
     });
     var studentCourseTD = $('<td>',{
         text: studentObj.course
     });
     var studentGradeTD = $('<td>',{
-        text: studentObj.studentGrade
+        text: studentObj.grade
     });
     var studentButtonTD = $('<td>');
     var delete_button = $('<button>',{
@@ -232,8 +235,35 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
  Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
  Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
 * */
+/**
+ * callDatabase - Ajax call to the LFZ sgt database
+ */
+var apiKey = '6AUO9AMoSM';
 
+function callDatabase(){
+    $.ajax({
+       type: "POST",
+        dataType: "json",
+        data: {
+            api_key: apiKey
+        },
+        url: "http://s-apis.learningfuze.com/sgt/get",
+        success: function(result){
+            if (!result.success){
+                console.log("Could not retrieve data");
+            }
+            data = result;
+            console.log("Ajax call success", result);
+            for (var i in result.data){
+                student_array.push(result.data[i]);
+                student_array[i]['deleted'] = false;
+                addStudentToDom(result.data[i]);
+            }
+        }
 
+    });
+    return;
+}
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
@@ -246,6 +276,7 @@ function reset() {
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function () {
+    //add_button();
     addClicked(); //addClicked function call to add button click function
     cancelClicked(); //cancelClicked function call to cancel button click function
     reset(); //reset function loaded to reset application to default state
