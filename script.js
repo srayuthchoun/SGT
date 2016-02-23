@@ -145,6 +145,7 @@ function updateData() {
     var average = +(calculateAverage()).toFixed(2);
     $('.avgGrade').html(average);
     updateStudentList();
+
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
