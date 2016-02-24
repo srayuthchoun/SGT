@@ -68,9 +68,11 @@ function addStudent() {
         }
     }
     //if not present or 1+ fields empty, add to array
-    if (matchNotFound) {
-        student_array.push(new_student);
-    }
+    /*if (matchNotFound) {
+     student_array.push(new_student);
+     }*/
+    console.log(new_student.name, new_student.course, new_student.grade);
+    sendData(new_student.name, new_student.course, new_student.grade);
     updateData();
 }
 /**
@@ -196,6 +198,8 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
         removeStudent(studentObj);
         $(this).parent().parent().remove();
         updateData();
+        console.log(studentObj.id);
+        deleteData(studentObj.id)
     });
     studentButtonTD.append(delete_button);
     studentRow.append(studentNameTD, studentCourseTD, studentGradeTD, studentButtonTD);
@@ -217,9 +221,9 @@ function callDatabase() {
         url: "http://s-apis.learningfuze.com/sgt/get",
         success: function (result) {
             if (!result.success) {
-                console.log("Could not retrieve data");
+                console.log("callDatabase - Could not retrieve data");
             }
-            console.log("Ajax call success", result);
+            console.log("Database call success", result);
             for (var i in result.data) { //loop through the data received from LF
                 student_array.push(result.data[i]); //adding objects from the data to the student array
                 student_array[i]['deleted'] = false; //add deleted values to the objects
@@ -228,6 +232,53 @@ function callDatabase() {
         }
     });
 }
+
+function sendData(student_name, student_course, student_grade){
+    console.log(student_name, student_course, student_grade);
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: {
+            api_key: apiKey,
+            name: student_name,
+            course: student_course,
+            grade: student_grade
+        },
+        url: "http://s-apis.learningfuze.com/sgt/create",
+        success: function (result) {
+            if(!result.success) {
+                console.log("sendData call failed", result);
+            }
+            if(result.success){
+                console.log("sendData call success", result);
+                $('.student-list > tbody').html('');
+                callDatabase();
+            }
+        }
+    });
+}
+
+function deleteData(deleted){
+    console.log(deleted);
+    $.ajax ({
+        type: "POST",
+        dataType: "json",
+        data: {
+            api_key: apiKey,
+            student_id: deleted,
+        },
+        url: "http://s-apis.learningfuze.com/sgt/delete",
+        success: function (result) {
+            if(!result.success) {
+                console.log("deleteData call failed", result);
+            }
+            if(result.success){
+                console.log("deleteData call success", result);
+            }
+        }
+    });
+}
+
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
@@ -241,5 +292,6 @@ function reset() {
  */
 $(document).ready(function () {
     reset(); //reset function loaded to reset application to default state
+    callDatabase();
 });
 
