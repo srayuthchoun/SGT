@@ -172,6 +172,7 @@ function updateStudentList() {
  */
 function addStudentToDom(studentObj)//meant to add one student to the DOM, one object in the array
 // is passed into this function
+
 {
     var studentRow = $('<tr>');//studentRow is now a table row
     //var studentNameTD = $('<td>').text(studentObj.name);
@@ -198,8 +199,8 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
         removeStudent(studentObj);
         $(this).parent().parent().remove();
         updateData();
-        console.log(studentObj.id);
-        deleteData(studentObj.id)
+        console.log('delete id: ', studentObj.id);
+        deleteData(studentObj.id);
     });
     studentButtonTD.append(delete_button);
     studentRow.append(studentNameTD, studentCourseTD, studentGradeTD, studentButtonTD);
@@ -212,6 +213,9 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
  * callDatabase - Ajax call to get data from Learning Fuze server
  */
 function callDatabase() {
+    $('.student-list > tbody').html('');
+    $('<h3>').appendTo('tbody');
+    $('tbody h3').text("Loading Data...");
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -223,7 +227,9 @@ function callDatabase() {
             if (!result.success) {
                 console.log("callDatabase - Could not retrieve data");
             }
-            console.log("Database call success", result);
+            $('.student-list > tbody').html('');
+            student_array = [];
+            console.log("callDatabase success", result);
             for (var i in result.data) { //loop through the data received from LF
                 student_array.push(result.data[i]); //adding objects from the data to the student array
                 student_array[i]['deleted'] = false; //add deleted values to the objects
@@ -251,7 +257,6 @@ function sendData(student_name, student_course, student_grade){
             }
             if(result.success){
                 console.log("sendData call success", result);
-                $('.student-list > tbody').html('');
                 callDatabase();
             }
         }
@@ -274,6 +279,7 @@ function deleteData(deleted){
             }
             if(result.success){
                 console.log("deleteData call success", result);
+                callDatabase();
             }
         }
     });
