@@ -1,7 +1,7 @@
 /**
  * Define all global variables here
  * */
-var apiKey = '6AUO9AMoSM';
+var apiKey = 'AD3PnYJCrF';
 /**
  * student_array - global array to hold student objects
  * @type {Array}
@@ -68,9 +68,10 @@ function addStudent() {
         }
     }
     //if not present or 1+ fields empty, add to array
-    if (matchNotFound) {
-        student_array.push(new_student);
-    }
+    //if (matchNotFound) {
+    //    student_array.push(new_student);
+    //}
+    sendData(new_student.name, new_student.course, new_student.grade);
     updateData();
 }
 /**
@@ -228,18 +229,71 @@ function callDatabase() {
         }
     });
 }
-/**
- * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
- */
-function reset() {
-    student_array = [];
-    updateData();
-    clearAddStudentForm();
+
+function sendData(student_name, student_course, student_grade) {
+    console.log(student_name, student_course, student_grade);
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: {
+            api_key: apiKey,
+            name: student_name,
+            course: student_course,
+            grade: student_grade
+        },
+        url: "http://s-apis.learningfuze.com/sgt/create",
+        success: function (result) {
+            if (!result.success) {
+                console.log("sendData call failed", result);
+            }
+            if (result.success) {
+                console.log("sendData call success", result);
+                $('.student-list > tbody').html('');
+
+            }
+
+        }
+    });
+
+    function deleteData(student_id) {
+        console.log(student_name, student_course, student_grade);
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: {
+                api_key: apiKey,
+                student_id: deleted,
+            },
+            url: "http://s-apis.learningfuze.com/sgt/delete",
+            success: function (result) {
+                if(!result.success) {
+                    console.log("deleteData call failed", result);
+                }
+                if(result.success) {
+                    console.log("deleteData call success", result);
+                    $('.student-list > tbody').html('');
+                }
+            }
+
+
+        })
+    }
+
+    /**
+     * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
+     */
+    function reset() {
+        student_array = [];
+        updateData();
+        clearAddStudentForm();
+    }
+
+    /**
+     * Listen for the document to load and reset the data to the initial state
+     */
+    $(document).ready(function () {
+        reset(); //reset function loaded to reset application to default state
+        //callDatabase();
+    });
 }
-/**
- * Listen for the document to load and reset the data to the initial state
- */
-$(document).ready(function () {
-    reset(); //reset function loaded to reset application to default state
-});
 
