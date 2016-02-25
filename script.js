@@ -200,6 +200,7 @@ function callDatabase() {
     $('.student-list > tbody').html('');
     $('<h3>').appendTo('tbody');
     $('tbody h3').text("Loading Data...");
+    $('.get_data').html('<img id="img-spinner" src="images/ajax-loader.gif"/>');
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -219,6 +220,8 @@ function callDatabase() {
                     student_array.push(result.data[i]); //adding objects from the data to the student array
                     student_array[i]['deleted'] = false; //add deleted values to the objects
                     addStudentToDom(result.data[i]); //add the data to the table
+                    $('.get_data').find('img').remove();
+                    $('.get_data').text('Get Data From Server');
                 }
             }
         },
@@ -302,4 +305,3 @@ $(document).ready(function () {
     reset(); //reset function loaded to reset application to default state
     callDatabase();
 });
-
