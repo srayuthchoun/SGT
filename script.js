@@ -127,7 +127,7 @@ function calculateAverage() {
 function updateData() {
     var average = +(calculateAverage()).toFixed(2);
     $('.avgGrade').html(average);
-    updateStudentList();
+    //updateStudentList();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
@@ -175,6 +175,7 @@ function updateStudentList() {
  */
 function addStudentToDom(studentObj)//meant to add one student to the DOM, one object in the array
 // is passed into this function
+
 {
     var studentRow = $('<tr>');//studentRow is now a table row
     //var studentNameTD = $('<td>').text(studentObj.name);
@@ -201,8 +202,8 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
         removeStudent(studentObj);
         $(this).parent().parent().remove();
         updateData();
-        console.log(studentObj.id);
-        deleteData(studentObj.id)
+        console.log('delete id: ', studentObj.id);
+        deleteData(studentObj.id);
     });
     studentButtonTD.append(delete_button);
     studentRow.append(studentNameTD, studentCourseTD, studentGradeTD, studentButtonTD);
@@ -215,6 +216,9 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
  * callDatabase - Ajax call to get data from Learning Fuze server
  */
 function callDatabase() {
+    $('.student-list > tbody').html('');
+    $('<h3>').appendTo('tbody');
+    $('.get_data').html('<img id="img-spinner" src="images/ajax-loader.gif"/>');
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -226,14 +230,21 @@ function callDatabase() {
             if (!result.success) {
                 console.log("callDatabase - Could not retrieve data");
             }
-            console.log("Database call success", result);
+            $('.student-list > tbody').html('');
+            student_array = [];
+            console.log("callDatabase success", result);
             for (var i in result.data) { //loop through the data received from LF
                 student_array.push(result.data[i]); //adding objects from the data to the student array
                 student_array[i]['deleted'] = false; //add deleted values to the objects
+
                 addStudentToDom(result.data[i]); //add the data to the table
+                $('.get_data').find('img').remove();
+                $('.get_data').text('Get Data From Server');
+
             }
         }
     });
+
 }
 
 
@@ -257,58 +268,60 @@ function sendData(student_name, student_course, student_grade) {
                 console.log("sendData call success", result);
                 $('.student-list > tbody').html('');
 
+                callDatabase();
             }
 
         }
     });
 }
 
-    function deleteData(deleted) {
-        console.log(deleted);
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: {
-                api_key: apiKey,
-                student_id: deleted,
-            },
-            url: "http://s-apis.learningfuze.com/sgt/delete",
-            success: function (result) {
-                if (!result.success) {
-                    console.log("deleteData call failed", result);
-                }
-                if (result.success) {
-                    console.log("deleteData call success", result);
-                }
+
+function deleteData(deleted) {
+    console.log(deleted);
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: {
+            api_key: apiKey,
+            student_id: deleted,
+        },
+        url: "http://s-apis.learningfuze.com/sgt/delete",
+        success: function (result) {
+            if (!result.success) {
+                console.log("deleteData call failed", result);
             }
-        });
-    }
-
-
-    /**
-     * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
-     */
-    function reset() {
-        student_array = [];
-        updateData();
-        clearAddStudentForm();
-    }
-
-    /**
-     * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
-     */
-    function reset() {
-        student_array = [];
-        updateData();
-        clearAddStudentForm();
-    }
-
-    /**
-     * Listen for the document to load and reset the data to the initial state
-     */
-    $(document).ready(function () {
-        reset(); //reset function loaded to reset application to default state
-        callDatabase();
+            if (result.success) {
+                console.log("deleteData call success", result);
+                callDatabase();
+            }
+        }
     });
+}
 
+
+/**
+ * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
+ */
+function reset() {
+    student_array = [];
+    updateData();
+    clearAddStudentForm();
+}
+
+/**
+ * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
+ */
+function reset() {
+    student_array = [];
+    updateData();
+    clearAddStudentForm();
+}
+
+/**
+ * Listen for the document to load and reset the data to the initial state
+ */
+$(document).ready(function () {
+    reset(); //reset function loaded to reset application to default state
+    callDatabase();
+});
 
