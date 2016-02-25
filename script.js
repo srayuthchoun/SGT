@@ -1,40 +1,40 @@
 /**
  * Define all global variables here
- * */
+ **/
 var apiKey = '6AUO9AMoSM';
 /**
  * student_array - global array to hold student objects
  * @type {Array}
- */
+ **/
 var student_array = [];
 /**
  * inputIds - id's of the elements that are used to add students more testing
  * @type {string[]}
- */
+ **/
 var inputIds = ['name', 'course', 'grade'];
 /**
  * addClicked - Event Handler when user clicks the add button
- */
+ **/
 function addClicked() {
     addStudent();
     clearAddStudentForm();
 }
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
- */
+ **/
 function cancelClicked() {
     clearAddStudentForm();
 }
 /**
  * getDataClicked - Event Handler when user clicks the get Data from Server button, should pull data from LFZ server
- */
+ **/
 function getDataClicked() {
     callDatabase();
 }
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  * @return undefined
- */
+ **/
 function addStudent() {
     console.log('addStudent function');
     var new_student = {};
@@ -55,29 +55,13 @@ function addStudent() {
         return;
     }
 
-    //assumes new entry
-    var matchNotFound = true;
-    //loop through existing array
-    for (student in student_array) {
-        // if already present, don't put into array
-        if (student_array[student].name == new_student.name &&
-            student_array[student].course == new_student.course &&
-            student_array[student].deleted == false) {
-            matchNotFound = false;
-            break;
-        }
-    }
-    //if not present or 1+ fields empty, add to array
-    /*if (matchNotFound) {
-     student_array.push(new_student);
-     }*/
-    console.log(new_student.name, new_student.course, new_student.grade);
+    console.log("name: ", new_student.name, "course: ", new_student.course, "grade: ", new_student.grade);
     sendData(new_student.name, new_student.course, new_student.grade);
     updateData();
 }
 /**
- clearAddStudentForm - clears out the form values based on inputIds variable
- */
+ * clearAddStudentForm - clears out the form values based on inputIds variable
+ **/
 function clearAddStudentForm() {
     for (var i = 0; i < inputIds.length; i++) {
         var index = inputIds[i];
@@ -86,14 +70,14 @@ function clearAddStudentForm() {
 }
 /**
  * removeStudent - find the student object to be deleted in the array, and set it's 'deleted' to true
- */
+ **/
 function removeStudent(studentObj) {
     student_array[student_array.indexOf(studentObj)].deleted = true;
 }
 /**
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
- */
+ **/
 function calculateAverage() {
     var total = 0;
     var average = 0;
@@ -124,11 +108,11 @@ function calculateAverage() {
 function updateData() {
     var average = +(calculateAverage()).toFixed(2);
     $('.avgGrade').html(average);
-    updateStudentList();
+    //updateStudentList(); Function call was used for v0.5
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
- */
+ **/
 function updateStudentList() {
     var currentName;
     var currentCourse;
@@ -169,7 +153,7 @@ function updateStudentList() {
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements
  * into the .student_list tbody
  * @param studentObj
- */
+ **/
 function addStudentToDom(studentObj)//meant to add one student to the DOM, one object in the array
 // is passed into this function
 
@@ -192,15 +176,16 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
         text: 'Delete'
     });
     /**
-     *Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
-     *Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
-     * */
+     * Add an anonymous function as the click handler to the dynamically created delete button for each student row - (Event Delegation)
+     * Delete button click handler function should have a call to removeStudent function that removes the object in the student_array*
+     **/
     delete_button.click(function () {
         removeStudent(studentObj);
         $(this).parent().parent().remove();
         updateData();
         console.log('delete id: ', studentObj.id);
         deleteData(studentObj.id);
+
     });
     studentButtonTD.append(delete_button);
     studentRow.append(studentNameTD, studentCourseTD, studentGradeTD, studentButtonTD);
@@ -208,10 +193,9 @@ function addStudentToDom(studentObj)//meant to add one student to the DOM, one o
 
     updateData();
 }
-
 /**
  * callDatabase - Ajax call to get data from Learning Fuze server
- */
+ **/
 function callDatabase() {
     $('.student-list > tbody').html('');
     $('<h3>').appendTo('tbody');
@@ -227,19 +211,27 @@ function callDatabase() {
             if (!result.success) {
                 console.log("callDatabase - Could not retrieve data");
             }
-            $('.student-list > tbody').html('');
-            student_array = [];
-            console.log("callDatabase success", result);
-            for (var i in result.data) { //loop through the data received from LF
-                student_array.push(result.data[i]); //adding objects from the data to the student array
-                student_array[i]['deleted'] = false; //add deleted values to the objects
-                addStudentToDom(result.data[i]); //add the data to the table
+            if (result.success) {
+                $('.student-list > tbody').html('');
+                student_array = [];
+                console.log("callDatabase success", result);
+                for (var i in result.data) { //loop through the data received from LF
+                    student_array.push(result.data[i]); //adding objects from the data to the student array
+                    student_array[i]['deleted'] = false; //add deleted values to the objects
+                    addStudentToDom(result.data[i]); //add the data to the table
+                }
             }
+        },
+        error: function (result) {
+            console.log("Could not send data");
+            alert("Server error, please try again later.");
         }
     });
 }
-
-function sendData(student_name, student_course, student_grade){
+/**
+ * sendData- Ajax call to send new student record to Learning Fuze server
+ **/
+function sendData(student_name, student_course, student_grade) {
     console.log(student_name, student_course, student_grade);
     $.ajax({
         type: "POST",
@@ -252,42 +244,52 @@ function sendData(student_name, student_course, student_grade){
         },
         url: "http://s-apis.learningfuze.com/sgt/create",
         success: function (result) {
-            if(!result.success) {
+            if (!result.success) {
                 console.log("sendData call failed", result);
             }
-            if(result.success){
+            if (result.success) {
                 console.log("sendData call success", result);
                 callDatabase();
             }
+        },
+        error: function (result) {
+            console.log("Could not send data");
+            alert("Server error, please try again later.");
         }
     });
 }
-
-function deleteData(deleted){
-    console.log(deleted);
-    $.ajax ({
+/**
+ * deleteData- Ajax call to delete a student record from Learning Fuze server
+ **/
+function deleteData(deleted) {
+    $.ajax({
         type: "POST",
         dataType: "json",
         data: {
             api_key: apiKey,
-            student_id: deleted,
+            student_id: deleted
         },
         url: "http://s-apis.learningfuze.com/sgt/delete",
         success: function (result) {
-            if(!result.success) {
+            if (!result.success) {
                 console.log("deleteData call failed", result);
+                alert("Unable to delete you are not authorized.")
+                callDatabase();
             }
-            if(result.success){
+            if (result.success) {
                 console.log("deleteData call success", result);
                 callDatabase();
             }
+        },
+        error: function (result) {
+            console.log("Could not send data");
+            alert("Server error, please try again later.");
         }
     });
 }
-
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
- */
+ **/
 function reset() {
     student_array = [];
     updateData();
@@ -295,7 +297,7 @@ function reset() {
 }
 /**
  * Listen for the document to load and reset the data to the initial state
- */
+ **/
 $(document).ready(function () {
     reset(); //reset function loaded to reset application to default state
     callDatabase();
